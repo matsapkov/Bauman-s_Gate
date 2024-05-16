@@ -8,7 +8,7 @@ Horseman = Unit('Horseman', 30, 7, 6,5,1,20,1,1.5,2)
 Archer = Unit('Archer', 30,8,2,6,5,15,1,1.5,2)
 
 class Bot(Player, Unit):
-
+    dead_units = dict()
     __units = dict()
     __BALANCE = 0
     __unit_symbols = ['A', 'B', 'C']
@@ -21,6 +21,9 @@ class Bot(Player, Unit):
             return self.__BALANCE
         if (item == 'dict_units'):
             return self.__units
+        if (item == 'dead'):
+            return self.__dead_units
+
     def get_units(self):
         return list(self.__units.values())
 
@@ -52,7 +55,7 @@ class Bot(Player, Unit):
         for unit in self.get_units():
             min_distance = 10000000000000000
             nearest_enemy = None
-            for enemy_unit in Player['units']:
+            for index, enemy_unit in Player['units'].items():
                 square_distance = (abs(unit.Position_i - enemy_unit.Position_i)) ** 2 + (
                     abs(unit.Position_j - enemy_unit.Position_j)) ** 2
                 distance = square_distance ** 0.5
@@ -80,7 +83,7 @@ class Bot(Player, Unit):
         #print(foundKey.Position_i, foundKey.Position_j)
         #print(enemy_pos)
         #print("Заходим в цикл атаки бота")
-        for defender in player['units']:
+        for index, defender in player['units'].items():
             defender_pos = [defender.Position_i, defender.Position_j]
             #print(defender_pos)
             #print("Заходим в иф")

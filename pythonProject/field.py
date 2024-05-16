@@ -57,8 +57,8 @@ class Field:
 
     def spawn_units(self, Player):
         occupied_coordinates = set()
-        units = Player.get_units()
-        for index, unit in enumerate(units):
+        units = Player['units']
+        for index, unit in units.items():
             unit.Position_i = 0
             while True:
                 unit.Position_j = random.randint(0, self.SIZE - 1)
@@ -66,6 +66,9 @@ class Field:
                     occupied_coordinates.add((unit.Position_i, unit.Position_j))
                     self.game_field[unit.Position_i][unit.Position_j] = index  # Использование счетчика индекса
                     break
+
+    def spawn_WIZARD(self, Wizard):
+        self.game_field[Wizard.Position_i][Wizard.Position_j] = 'ඞ'
 
     def spawn_BOTunits(self, bot):
         occupied_coordinates = set()
@@ -127,8 +130,8 @@ class Field:
     def get_sub_game_field(self):
         return self.sub_game_field
 
-    def update_field(self, Player, Bot):
-        for index, unit in enumerate(Player.get_units()):
+    def update_field(self, Player, Bot, DarkWizard):
+        for index, unit in Player['units'].items():
             data = unit.save_coordinates()
             if([data[1][0],data[1][1]] != [data[0][0],data[0][1]]):
                 self.game_field[data[1][0]][data[1][1]] = index
@@ -138,3 +141,14 @@ class Field:
             if([data[1][0],data[1][1]] != [data[0][0],data[0][1]]):
                 self.game_field[data[1][0]][data[1][1]] = letter
                 self.game_field[data[0][0]][data[0][1]] = self.sub_game_field[data[0][0]][data[0][1]]
+        for unit_ in DarkWizard.Aliens:
+            self.game_field[unit_.Position_i][unit_.Position_j] = 'ʘ'
+            self.game_field[unit_.prev_positionI][unit_.prev_positionJ] = self.sub_game_field[unit_.prev_positionI][unit_.prev_positionJ]
+        # if len(DarkWizard.Captured_Player_Units) != 0:
+        #     for unit_ in DarkWizard.Captured_Player_Units:
+        #         self.game_field[unit_.Position_i][unit_.Position_j] = 'ʘ'
+        #         self.game_field[unit_.prev_positionI][unit_.prev_positionJ] = self.sub_game_field[unit_.prev_positionI][unit_.prev_positionJ]
+        # if len(DarkWizard.Captured_Bot_Units) != 0:
+        #     for unit_ in DarkWizard.Aliens:
+        #         self.game_field[unit_.Position_i][unit_.Position_j] = 'ʘ'
+        #         self.game_field[unit_.prev_positionI][unit_.prev_positionJ] = self.sub_game_field[unit_.prev_positionI][unit_.prev_positionJ]

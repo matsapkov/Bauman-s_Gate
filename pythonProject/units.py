@@ -53,7 +53,11 @@ class Unit:
 
     def display_stats(self, player):
         print('----------------')
-        print(f'Name: {self['Name']}\nHP: {self['HP']} \nSymbol: {player.get_units().index(self)} \nAvailable move points: {self['Move_points']}\nDefPts: {self['def']}\nRange: {self['range']}\nAttackPoints: {self['Attack_points']}')
+        for index, unit in player['units'].items():
+            if unit == self:
+                symbol = index
+
+        print(f'Name: {self['Name']}\nHP: {self['HP']} \nSymbol: {symbol} \nAvailable move points: {self['Move_points']}\nDefPts: {self['def']}\nRange: {self['range']}\nAttackPoints: {self['Attack_points']}')
         print('----------------')
         return '\n'
 
@@ -83,7 +87,7 @@ class Unit:
         else:
             print("Target cell is not accessible.")
 
-    def attacking(self,bot, field):
+    def attacking(self,bot, field, wizard):
         target_cell = input('Введите координату юнита для атаки: ' ).strip().upper()
         column = target_cell[0]
         row = int(target_cell[1:])
@@ -94,14 +98,50 @@ class Unit:
         start_position = (self.Position_i, self.Position_j)
         square_sum = (abs(target_position[1] - start_position[1])) ** 2 + (abs(target_position[0]) - start_position[0]) ** 2
         hypotenuse = square_sum ** 0.5
-        if (self['range'] >= hypotenuse):
-            for unit in bot.get_units():
-                data = unit.save_coordinates()
-                defender_pos = (data[1][0], data[1][1])
-                if (target_position == defender_pos):
-                    bot.get_damage(self,unit, field)
-        else:
-            print('Attack is impossible')
+
+        choice = int(input('Если это чужой, введите 2, если это маг, введите 1, если это бот, введите 0: '))
+        if choice == 0:
+            print('Выбрана атака по боту')
+            if (self['range'] >= hypotenuse):
+                for unit in bot.get_units():
+                    data = unit.save_coordinates()
+                    defender_pos = (data[1][0], data[1][1])
+                    if (target_position == defender_pos):
+                        bot.get_damage(self,unit, field)
+            else:
+                print('Attack is impossible')
+
+        if (choice == 1):
+            print('Выбрана атака по магу')
+            if (self['range'] >= hypotenuse):
+                for unit in wizard.Wizards:
+                    defender_pos = (wizard.Position_i,wizard.Position_j )
+                    if (target_position == defender_pos):
+                        print('Атака по магу реально работает')
+                        unit.get_damage(self,  field)
+            else:
+                print('Attack is impossible')
+
+        if choice == 2:
+            print('Выбрана атака по чужому')
+            if (self['range'] >= hypotenuse):
+                for unit in wizard.Aliens:
+                    data = unit.save_coordinates()
+                    defender_pos = (data[1][0], data[1][1])
+                    if (target_position == defender_pos):
+                        unit.Get_damage(self, field, wizard)
+                # for unit in wizard.Captured_Player_Units:
+                #     data = unit.save_coordinates()
+                #     defender_pos = (data[1][0], data[1][1])
+                #     if (target_position == defender_pos):
+                #         wizard.get_damage(self, unit, field)
+                # for unit in wizard.Captured_Bot_Units:
+                #     data = unit.save_coordinates()
+                #     defender_pos = (data[1][0], data[1][1])
+                #     if (target_position == defender_pos):
+                #         wizard.get_damage(self, unit, field)
+            else:
+                print('Attack is impossible')
 
     def get_damage(self, attacker, field, player):
         print(f'Your unit {self['Name']} was attacked by {attacker['Name']}!')
@@ -121,11 +161,17 @@ class Unit:
 
     def die(self, field, player):
         print(f'Unit {self["Name"]} has died!')
-        units = player.get_units()
-        for i in range(len(units)):
-            if units[i] == self:
-                units.pop(i)
+        units = player['units']
+
+        for key, value in units.items():
+            if value == self:
+                del units[key]
                 break
+
+        # for i in range(len(units)):
+        #     if units[i] == self:
+        #         units.pop(i)
+        #         break
         field.game_field[self.Position_i][self.Position_j] = field.sub_game_field[self.Position_i][self.Position_j]
 
 
