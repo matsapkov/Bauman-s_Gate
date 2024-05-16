@@ -48,16 +48,16 @@ class GameMenu:
     def main_menu(self):
         while True:
 
-            print(self.Wizard.turn)
+            print(f'----------СЕЙЧАС ИДЕТ ХОД: {self.Wizard.turn - 1}----------')
 
-            if len(self.Wizard.Aliens) == 0:
-                print('Настоящих элиенов нет')
-            else:
-                print(self.Wizard.Aliens)
-
-            for unit in self.Wizard.Aliens:
-                print('Корды прокси')
-                print(unit.Position_i, unit.Position_j)
+            # if len(self.Wizard.Aliens) == 0:
+            #     print('Настоящих элиенов нет')
+            # else:
+            #     print(self.Wizard.Aliens)
+            #
+            # for unit in self.Wizard.Aliens:
+            #     print('Корды прокси')
+            #     print(unit.Position_i, unit.Position_j)
 
             if len(self.player['units']) == 0:
                 print('----------BOT WON----------')
@@ -66,14 +66,15 @@ class GameMenu:
                 print('----------PLAYER WON----------')
                 break
 
-            if (len(self.Wizard.Captured_Player_Units)) != 0:
-                print(self.Wizard.Captured_Player_Units)
-            else:
-                print('Юнитов игрока захваченных нет')
-            if (len(self.Wizard.Captured_Bot_Units)) != 0:
-                print(self.Wizard.Captured_Bot_Units)
-            else:
-                print('Юнитов бота захваченных нет')
+            # if (len(self.Wizard.Captured_Player_UnitsDict)) != 0:
+            #     print(self.Wizard.Captured_Player_UnitsDict)
+            # else:
+            #     print('Юнитов игрока захваченных нет')
+            # if (len(self.Wizard.Captured_Bot_UnitsDict)) != 0:
+            #     print(self.Wizard.Captured_Bot_UnitsDict)
+            # else:
+            #     print('Юнитов бота захваченных нет')
+
             print("\nMain Menu:")
             print("1. Move player unit")
             print("2. Attack with player unit")
@@ -88,7 +89,7 @@ class GameMenu:
                 unit_index = int(input("Enter the index of the unit you want to move: "))
                 selected_unit = self.player.get_units()[unit_index]
                 selected_unit.moving(self.field)
-                print(f'{self.Wizard.turn} какой сейчас ход')
+                # print(f'{self.Wizard.turn} какой сейчас ход')
                 if self.Wizard.TURN % 4 == 0 and self.Wizard.turn != 0:
                     if len(self.Wizard.Wizards) != 0:
                         self.Wizard.spawnAliens()
@@ -102,12 +103,12 @@ class GameMenu:
                 unit_index = int(input("Enter the index of the unit you want to attack: "))
                 selected_unit = self.player.get_units()[unit_index]
                 selected_unit.attacking(self.bot, self.field, self.Wizard)
-                print(f'{self.Wizard.turn} какой сейчас ход')
+                # print(f'{self.Wizard.turn} какой сейчас ход')
 
                 if len(self.Wizard.Wizards) == 0:
-                    print('Функция возвращения юнитов работает')
+                    # print('Функция возвращения юнитов работает')
                     self.Wizard.returning(self.player, self.bot, self.field)
-                    print(f'Юниты игрока: {self.player.get_units()}')
+                    # print(f'Юниты игрока: {self.player.get_units()}')
 
                 if self.Wizard.TURN % 4 == 0 and self.Wizard.turn != 0:
                     if len(self.Wizard.Wizards) != 0:
@@ -119,10 +120,11 @@ class GameMenu:
                 self.Wizard.turn += 1
 
             elif choice == "3":
-                print('----------BOTS TURN----------')
+                print('----------BOTS and WIZARDS TURN----------')
                 self.bot.move_towards_enemy(self.player, self.field)
-                print(f'{self.Wizard.turn} какой сейчас ход')
-                print(self.Wizard.turn)
+                self.field.update_field(self.player, self.bot, self.Wizard)
+                # print(f'{self.Wizard.turn} какой сейчас ход')
+                # print(self.Wizard.turn)
                 if self.Wizard.TURN % 4 == 0 and self.Wizard.turn != 0:
                     if len(self.Wizard.Wizards) != 0:
                         self.Wizard.spawnAliens()

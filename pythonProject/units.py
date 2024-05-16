@@ -1,5 +1,5 @@
 class Unit:
-    def __init__(self, name, hp, dp, mp, ap, ar, cost, TP, SP, RP):
+    def __init__(self, name='name', hp=0, dp=0, mp=0, ap=0, ar=0, cost=0, TP=0, SP=0, RP=0):
         self.__Name = name
         self.__hit_Points = hp
         self.__def_Points = dp
@@ -12,6 +12,22 @@ class Unit:
         self.__rock_penalty = RP
         self.Position_i = 0
         self.Position_j = 0
+        self.prev_positionI = 0
+        self.prev_positionJ = 0
+
+    def copy_from_alien(self, alien):
+        self.__Name = alien._Alien__Name
+        self.__hit_Points = alien._Alien__hit_Points
+        self.__def_Points = alien._Alien__def_Points
+        self.__move_Points = alien._Alien__move_Points
+        self.__attack_Points = alien._Alien__attack_Points
+        self.__attack_Range = alien._Alien__attack_Range
+        self.__Cost = alien._Alien__Cost
+        self.__tree_penalty = alien._Alien__tree_penalty
+        self.__swamp_penalty = alien._Alien__swamp_penalty
+        self.__rock_penalty = alien._Alien__rock_penalty
+        self.Position_i = alien.Position_i
+        self.Position_j = alien.Position_j
         self.prev_positionI = 0
         self.prev_positionJ = 0
 
@@ -40,6 +56,7 @@ class Unit:
     @property
     def HP(self):
         return self.__hit_Points
+
     @HP.setter
     def HP(self, value):
         self.__hit_Points = value
@@ -47,6 +64,7 @@ class Unit:
     @property
     def DEF(self):
         return self.__def_Points
+
     @DEF.setter
     def DEF(self, value):
         self.__def_Points = value

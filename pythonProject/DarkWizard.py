@@ -13,7 +13,7 @@ class DarkWizard(Unit):
         self.Captured_Bot_UnitsDict = {}
         self.__hit_Points = HP
         self.__def_Points = dp
-        self.turn = 0
+        self.turn = 1
         self.Position_i = field.SIZE // 2
         self.Position_j = field.SIZE // 2
 
@@ -46,68 +46,62 @@ class DarkWizard(Unit):
             for unit_ in self.Aliens:
                 unit_.Go(field,  self)
 
-        # if len(self.Captured_Player_Units) != 0:
-        #     for unit_ in self.Captured_Player_Units:
-        #         unit_.Go(field, self)
+        # if len(self.Captured_Player_UnitsDict) != 0:
+        #      for unit_ in self.Captured_Player_UnitsDict.values():
+        #          unit_.Go(field, self)
         #
-        # if len(self.Captured_Bot_Units) != 0:
-        #     for unit_ in self.Captured_Bot_Units:
-        #         unit_.Go(field, self)
+        # if len(self.Captured_Bot_UnitsDict) != 0:
+        #      for unit_ in self.Captured_Bot_UnitsDict.values():
+        #          unit_.Go(field, self)
 
     def catch(self, player, bot):
-
         players_units_to_add = []
         bots_units_to_add = []
 
         player_units = player['units']
         bot_units = bot['dict_units']
-        for alien in self.Aliens:
-            for index, unit in player_units.items():
-                if alien.Position_i == unit.Position_i and alien.Position_j == unit.Position_j:
-                    print('Произошел захват юнита игрока')
 
-                    copied_PlayerUnit = copy.deepcopy(unit)
-                    self.Captured_Player_UnitsDict[index] = unit
-                    # self.Aliens.append(Alien(copied_PlayerUnit))
+        player_unit_keys = list(player_units.keys())
+        for index in player_unit_keys:
+            unit = player_units[index]
+            if any(alien.Position_i == unit.Position_i and alien.Position_j == unit.Position_j for alien in
+                   self.Aliens):
+                print('----------PLAYERS UNIT WAS CAPTURED----------')
+                copied_PlayerUnit = copy.deepcopy(unit)
+                Slave = Alien(copied_PlayerUnit)
+                self.Captured_Player_UnitsDict[index] = Slave
+                players_units_to_add.append(Slave)
+                del player_units[index]  # Удаляем захваченный юнит из списка игрока
 
-                    players_units_to_add.append(Alien(copied_PlayerUnit))
-
-                    # self.Captured_Player_Units.append(Alien(copied_PlayerUnit))
-
-        self.Aliens.extend(players_units_to_add)
-
-        for index, unit in self.Captured_Player_UnitsDict.items():
-            if unit in player_units.values():
-                del player_units[index]
-
-        for alien in self.Aliens:
-            for key, value in bot['dict_units'].items():
-                if alien.Position_i == value.Position_i and alien.Position_j == value.Position_j:
-                    print('Произошел захват юнита бота')
-
-
-
-                    copied_BotUnit = copy.deepcopy(value)
-                    self.Captured_Bot_UnitsDict[key] = value
-
-                    bots_units_to_add.append(Alien(copied_BotUnit))
-
-                    self.Aliens.append(Alien(copied_BotUnit))
+        # Аналогично для юнитов бота
+        bot_unit_keys = list(bot_units.keys())
+        for key in bot_unit_keys:
+            value = bot_units[key]
+            if any(alien.Position_i == value.Position_i and alien.Position_j == value.Position_j for alien in
+                   self.Aliens):
+                print('----------BOTS UNIT WAS CAPTURED----------')
+                print(f'Координаты юнита бота: {value.Position_i, value.Position_j}.')
+                copied_BotUnit = copy.deepcopy(value)
+                Slave = Alien(copied_BotUnit)
+                self.Captured_Bot_UnitsDict[key] = Slave
+                bots_units_to_add.append(Slave)
+                del bot_units[key]  # Удаляем захваченный юнит из списка бота
 
         self.Aliens.extend(bots_units_to_add)
-
-        for index, unit in self.Captured_Bot_UnitsDict.items():
-            if unit in bot_units.values():
-                del bot_units[index]
+        self.Aliens.extend(players_units_to_add)
 
     def returning(self, player, bot, field):
         player_units = player['units']
         bot_units = bot['dict_units']
         for index, value in self.Captured_Player_UnitsDict.items():
-            player_units[index] = value
+            blank = Unit()
+            blank.copy_from_alien(value)
+            player_units[index] = blank
             field.game_field[value.Position_i][value.Position_j] = index
         for index, value in self.Captured_Bot_UnitsDict.items():
-            bot_units[index] = value
+            blank = Unit()
+            blank.copy_from_alien(value)
+            bot_units[index] = blank
             field.game_field[value.Position_i][value.Position_j] = index
 
         self.Captured_Bot_UnitsDict.clear()
@@ -119,7 +113,7 @@ class DarkWizard(Unit):
         print(f'----------DARK WIZARD HAS DIED----------')
         self.Wizards.clear()
         for unit in self.Aliens:
-            unit.Die(field)
+            unit.Die(field, self)
         self.Aliens.clear()
         field.game_field[self.Position_i][self.Position_j] = field.sub_game_field[self.Position_i][self.Position_j]
 
@@ -223,16 +217,16 @@ class Alien(Unit):
         direction = random.choice(directions)
 
         if (Field.SIZE > self.Position_i + direction[0] >= 0) and (Field.SIZE > self.Position_j + direction[1] >= 0):
-            print('Зашли в иф')
-            print(f'Выпало направление ходьбы на {direction}')
-            print(f'Текущие координаты {self.Position_i, self.Position_j}')
-            print(f'Текущие координаты визарда {wizard.Position_i, wizard.Position_j}')
-            print(f'НОВЫЕ КООРДИНАТЫ {self.Position_i + direction[0], self.Position_j + direction[1]}')
-            if ((self.Position_i + direction[0] == wizard.Position_i) and (
-                    self.Position_j + direction[1] == wizard.Position_j)):
-                print('ПОЗИЦИЯ ВИЗАРДА И ЧУЖОГО СНОВА СОВПАЛА')
+            # print('Зашли в иф')
+            # print(f'Выпало направление ходьбы на {direction}')
+            # print(f'Текущие координаты {self.Position_i, self.Position_j}')
+            # print(f'Текущие координаты визарда {wizard.Position_i, wizard.Position_j}')
+            # print(f'НОВЫЕ КООРДИНАТЫ {self.Position_i + direction[0], self.Position_j + direction[1]}')
+            # if ((self.Position_i + direction[0] == wizard.Position_i) and (
+            #         self.Position_j + direction[1] == wizard.Position_j)):
+            #     print('ПОЗИЦИЯ ВИЗАРДА И ЧУЖОГО СНОВА СОВПАЛА')
             if (self.Position_i + direction[0] != wizard.Position_i) or (self.Position_j + direction[1] != wizard.Position_j):
-                print('ПОЗИЦИЯ ВИЗАРДА И ЧУЖОГО СНОВА НЕ СОВПАЛА')
+                # print('ПОЗИЦИЯ ВИЗАРДА И ЧУЖОГО СНОВА НЕ СОВПАЛА')
                 self.prev_positionI = self.Position_i
                 self.prev_positionJ = self.Position_j
                 self.Position_i = direction[0] + self.Position_i
@@ -254,14 +248,11 @@ class Alien(Unit):
                     self.Die(field, wizard)
 
     def Die(self, field, wizard):
-        print('Чужой умирает!')
-
+        print('----------ALIEN HAS DIED----------!')
+        # print(f'координаты трупа {self.Position_i, self.Position_j}')
         for index, value in enumerate(wizard.Aliens):
             if value == self:
                 wizard.Aliens.pop(index)
                 break
 
         field.game_field[self.Position_i][self.Position_j] = field.sub_game_field[self.Position_i][self.Position_j]
-
-# alien = Alien(unit=Unit('name', 1,1,1,1,1,1,1,1,1))
-# wizard = DarkWizard(100, 1, Field)
