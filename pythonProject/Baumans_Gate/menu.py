@@ -8,9 +8,9 @@ from database.map_database import Database
 from DarkWizard import DarkWizard, Alien
 
 database = Database()
-Swordsman = Unit('Swordsman', 50, 8,3, 5,1, 10, 1,1.5,2)
-Horseman = Unit('Horseman', 30, 7, 6,5,1,20,1,1.5,2)
-Archer = Unit('Archer', 30,8,2,6,5,15,1,1.5,2)
+Swordsman = Unit('Swordsman', 50, 8,3, 5,1, 10, 1,1.5,2,SC='on_foot')
+Horseman = Unit('Horseman', 30, 7, 6,5,1,20,1,1.5,2, SC='cavalry')
+Archer = Unit('Archer', 30,8,2,6,5,15,1,1.5,2, SC='shooting')
 
 class GameMenu:
     def __init__(self):
@@ -31,7 +31,7 @@ class GameMenu:
         choice = input()
 
         if choice == '1':
-            self.field = Field(int(input("Enter the size of the game field: ")))
+            self.field = Field(size=int(input("Enter the size of the game field: ")))
         elif choice == '2':
             database.show_maps()
             search_name = input('Введите имя карты, на которой вы хотите сыграть...\n')
@@ -39,14 +39,14 @@ class GameMenu:
             with open('pickles/searched_pickle.pkl', 'wb') as f:
                 f.write(data)
             with open('pickles/searched_pickle.pkl', 'rb') as f:
-                # pickled_data = pickle.load(f)
-                # pickled_map = MapCreator(pickled_data)
-                # searched_map = Field.copy_from_pickle(pickled_map)
+                pickled_data = pickle.load(f)
                 field = Field()
-                field.copy_from_pickle(pickle.load(f))
+                field.copy_from_pickle(pickled_data)
 
             print(f'Найдена карта {search_name}')
             self.field = field
+            print(self.field.obstacles)
+            print(f'Препятствия в кастомной карте {self.field.obstacles}')
         else:
             print('Invalid input')
 
@@ -58,7 +58,7 @@ class GameMenu:
             self.player.unit_to_buy()
             self.player.buy_units(Swordsman, Archer, Horseman)
 
-        if choice != 2:
+        if choice == 1:
             self.field.fill_field()
 
         self.bot.random_units()
@@ -68,6 +68,7 @@ class GameMenu:
 
         self.field.spawn_WIZARD(self.Wizard)
         self.field.print_field(self.field.game_field)
+        self.field.create_coordinates()
         self.field.print_coordinates()
 
     def main_menu(self):

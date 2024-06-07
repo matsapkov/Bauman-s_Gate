@@ -1,5 +1,5 @@
 class Unit:
-    def __init__(self, name='name', hp=0, dp=0, mp=0, ap=0, ar=0, cost=0, TP=0, SP=0, RP=0):
+    def __init__(self, name='name', hp=0, dp=0, mp=0, ap=0, ar=0, cost=0, TP=0, SP=0, RP=0, SC=None):
         self.__Name = name
         self.__hit_Points = hp
         self.__def_Points = dp
@@ -10,6 +10,7 @@ class Unit:
         self.__tree_penalty = TP
         self.__swamp_penalty = SP
         self.__rock_penalty = RP
+        self.__super_class = SC
         self.Position_i = 0
         self.Position_j = 0
         self.prev_positionI = 0
@@ -26,6 +27,7 @@ class Unit:
         self.__tree_penalty = alien._Alien__tree_penalty
         self.__swamp_penalty = alien._Alien__swamp_penalty
         self.__rock_penalty = alien._Alien__rock_penalty
+        self.__super_class = alien._Alien__super_class
         self.Position_i = alien.Position_i
         self.Position_j = alien.Position_j
         self.prev_positionI = 0

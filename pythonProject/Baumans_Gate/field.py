@@ -9,16 +9,15 @@ class Field:
     __sub_game_field = [[]]
     obstacles = []
     def __init__(self, size=0, GAME_FIELD=None, SUB_GAME_FIELD=None):
+        self.SIZE = size
         if GAME_FIELD is None:
             GAME_FIELD = [[0 for _ in range(self.SIZE)] for _ in range(self.SIZE)]
-        self.SIZE = size
-        # self.game_field = [[0 for _ in range(self.SIZE)] for _ in range(self.SIZE)]
-        # self.sub_game_field = [[0 for _ in range(self.SIZE)] for _ in range(self.SIZE)]
         if SUB_GAME_FIELD is None:
             SUB_GAME_FIELD = [[0 for _ in range(self.SIZE)] for _ in range(self.SIZE)]
         self.game_field = GAME_FIELD
         self.sub_game_field = SUB_GAME_FIELD
-        self.create_coordinates()
+        self.coordinates = {}
+
 
     def copy_from_pickle(self, pickled_field):
         self.SIZE = pickled_field.SIZE
@@ -27,6 +26,7 @@ class Field:
         self.obstacles = pickled_field.obstacles
 
     def fill_field(self):
+        print(f'Размер поля {len(self.game_field)}')
         obstacle_probability = [0.1, 0.2, 0.3]
         for i in range(1, self.SIZE - 1):
             for j in range(self.SIZE):
@@ -57,11 +57,13 @@ class Field:
             self.coordinates[i] = {}
             for j in range(self.SIZE):
                 self.coordinates[i][j] = f'{letters[j]}{i}'
+
     def print_field(self, game_field):
         for row in game_field:
             print(' '.join(map(str, row)))
 
     def print_coordinates(self):
+
         for i in range(self.SIZE):
             for j in range( self.SIZE):
                 print(self.coordinates[i][j], end='\t')

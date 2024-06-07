@@ -30,7 +30,7 @@ class DarkWizard(Unit):
         occupied_cords = set()
         if self.turn % 2 == 0 and self.turn != 0:
             directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-            alien = Alien(unit=Unit('name', 1,1,1,1,1,1,1,1,1))
+            alien = Alien(unit=Unit('name', 1,1,1,1,1,1,1,1,1, SC=None))
             while True:
                 direction = random.choice(directions)
                 coords = (self.Position_i + direction[0], self.Position_j + direction[1])
@@ -161,6 +161,7 @@ class Alien(Unit):
         self.__tree_penalty = unit._Unit__tree_penalty
         self.__swamp_penalty = unit._Unit__swamp_penalty
         self.__rock_penalty = unit._Unit__rock_penalty
+        self.__super_class = unit._Unit__super_class
         self.Position_i = unit.Position_i
         self.Position_j = unit.Position_j
         self.prev_positionI = 0
