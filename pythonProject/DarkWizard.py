@@ -250,9 +250,25 @@ class Alien(Unit):
     def Die(self, field, wizard):
         print('----------ALIEN HAS DIED----------!')
         # print(f'координаты трупа {self.Position_i, self.Position_j}')
+        unit_to_delete = dict()
         for index, value in enumerate(wizard.Aliens):
             if value == self:
                 wizard.Aliens.pop(index)
+                for key, value_ in wizard.Captured_Player_UnitsDict.items():
+                    if value == value_:
+                        unit_to_delete[key] = value_
+                for key, value_ in wizard.Captured_Bot_UnitsDict.items():
+                    if value == value_:
+                        unit_to_delete[key] = value_
+
+                for key, value_ in unit_to_delete.items():
+                    if value_ in wizard.Captured_Bot_UnitsDict:
+                        del wizard.Captured_Bot_UnitsDict[key]
+
+                for key, value_ in unit_to_delete.items():
+                    if value_ in wizard.Captured_Player_UnitsDict:
+                        del wizard.Captured_Player_UnitsDict[key]
+
                 break
 
         field.game_field[self.Position_i][self.Position_j] = field.sub_game_field[self.Position_i][self.Position_j]
