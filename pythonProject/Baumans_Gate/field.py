@@ -116,6 +116,15 @@ class Field:
                     cell_penalty = unit['tree_penalty']
                 elif terrain_type == '{':  # Холм
                     cell_penalty = unit['rock_penalty']
+                if terrain_type in self.obstacles:
+                    for obstacle in self.obstacles:
+                        if terrain_type == obstacle.symbol:
+                            if unit['SC'] == 'on_foot':
+                                cell_penalty = obstacle.unit_on_foot_penalty
+                            if unit['SC'] == 'cavalry':
+                                cell_penalty = obstacle.unit_on_cavalry_penalty
+                            if unit['SC'] == 'shooting':
+                                cell_penalty = obstacle.unit_shooting_penalty
                 new_penalty = penalty + cell_penalty
                 queue.append((neighbor, path + [current], new_penalty))
         return None, 0
@@ -158,11 +167,3 @@ class Field:
         for unit_ in DarkWizard.Aliens:
             self.game_field[unit_.Position_i][unit_.Position_j] = 'ʘ'
             self.game_field[unit_.prev_positionI][unit_.prev_positionJ] = self.sub_game_field[unit_.prev_positionI][unit_.prev_positionJ]
-        # if len(DarkWizard.Captured_Player_Units) != 0:
-        #     for unit_ in DarkWizard.Captured_Player_Units:
-        #         self.game_field[unit_.Position_i][unit_.Position_j] = 'ʘ'
-        #         self.game_field[unit_.prev_positionI][unit_.prev_positionJ] = self.sub_game_field[unit_.prev_positionI][unit_.prev_positionJ]
-        # if len(DarkWizard.Captured_Bot_Units) != 0:
-        #     for unit_ in DarkWizard.Aliens:
-        #         self.game_field[unit_.Position_i][unit_.Position_j] = 'ʘ'
-        #         self.game_field[unit_.prev_positionI][unit_.prev_positionJ] = self.sub_game_field[unit_.prev_positionI][unit_.prev_positionJ]

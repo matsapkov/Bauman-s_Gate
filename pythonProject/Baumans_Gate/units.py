@@ -54,6 +54,8 @@ class Unit:
             return self.__attack_Range
         elif (item == 'def'):
             return self.__def_Points
+        elif (item == 'SC'):
+            return self.__super_class
 
     @property
     def HP(self):
