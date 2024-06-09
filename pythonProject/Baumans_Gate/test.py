@@ -1,5 +1,10 @@
-directions = (0, -1)
+from Baumans_Gate.Town.GenericBuilding import GenericBuilding
+from Baumans_Gate.Town.Arsenal import Arsenal
+from Baumans_Gate.Town.Forge import Forge
 
-a = 3
+forge1 = Forge()
+forge2 = Forge()
 
-print(a + directions[1])
+print(isinstance(forge1, forge2.__class__))
+
+

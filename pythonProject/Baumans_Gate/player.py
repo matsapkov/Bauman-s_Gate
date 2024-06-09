@@ -1,9 +1,10 @@
-
 class Player:
     __BALANCE = 0
     __units = dict()
     dead_units = []
     unit_count = 0  # Счетчик для генерации уникальных ключей
+    wood = 200
+    stone = 200
 
     def __init__(self, balance):
         self.__BALANCE = balance
@@ -44,3 +45,35 @@ class Player:
         for unit in self.__units.values():
             unit.display_stats(player)
 
+    def check_balance(self):
+        print(f'Текущее состояние казны: Дерево - {self.wood}, Камень - {self.stone}')
+
+    @property
+    def balance(self):
+        return self.__BALANCE
+
+    @balance.setter
+    def balance(self, value):
+        if value < 0:
+            raise ValueError("Баланс не может быть отрицательным.")
+        self.__BALANCE = value
+
+    @property
+    def WOOD(self):
+        return self.wood
+
+    @WOOD.setter
+    def WOOD(self, value):
+        if value < 0:
+            raise ValueError("Количество дерева не может быть отрицательным.")
+        self.wood = value
+
+    @property
+    def STONE(self):
+        return self.stone
+
+    @STONE.setter
+    def STONE(self, value):
+        if value < 0:
+            raise ValueError("Количество камня не может быть отрицательным.")
+        self.stone = value

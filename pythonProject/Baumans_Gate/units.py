@@ -1,3 +1,6 @@
+import random
+
+
 class Unit:
     def __init__(self, name='name', hp=0, dp=0, mp=0, ap=0, ar=0, cost=0, TP=0, SP=0, RP=0, SC=None):
         self.__Name = name
@@ -11,8 +14,8 @@ class Unit:
         self.__swamp_penalty = SP
         self.__rock_penalty = RP
         self.__super_class = SC
-        self.Position_i = 0
-        self.Position_j = 0
+        self.Position_i = None
+        self.Position_j = None
         self.prev_positionI = 0
         self.prev_positionJ = 0
 
@@ -73,6 +76,36 @@ class Unit:
     def DEF(self, value):
         self.__def_Points = value
 
+    @property
+    def move_Points(self):
+        return self.__move_Points
+
+    @move_Points.setter
+    def move_Points(self, value):
+        self.__move_Points = value
+
+    @property
+    def attack_points(self):
+        return self.__attack_Points
+
+    @attack_points.setter
+    def attack_points(self, value):
+        self.__attack_Points = value
+
+    def improve_stat(self, stat):
+        if stat == 'hit_Points':
+            self.__hit_Points += 1
+        elif stat == 'def_Points':
+            self.__def_Points += 1
+        elif stat == 'move_Points':
+            self.__move_Points += 1
+        elif stat == 'attack_Points':
+            self.__attack_Points += 1
+        elif stat == 'attack_Range':
+            self.__attack_Range += 1
+        else:
+            print("Недопустимая характеристика")
+
     def display_stats(self, player):
         print('----------------')
         for index, unit in player['units'].items():
@@ -80,6 +113,7 @@ class Unit:
                 symbol = index
 
         print(f'Name: {self['Name']}\nHP: {self['HP']} \nSymbol: {symbol} \nAvailable move points: {self['Move_points']}\nDefPts: {self['def']}\nRange: {self['range']}\nAttackPoints: {self['Attack_points']}')
+        print(self.Position_i, self.Position_j)
         print('----------------')
         return '\n'
 
@@ -90,6 +124,20 @@ class Unit:
         posJ = self.Position_j
         data = [[prevI, prevJ],[posI, posJ]]
         return data
+
+    def spawn_unit_from_academy(self, player, field):
+        occupied_coords = set()
+        units = player['units']
+        self.Position_i = 0
+        for unit in units.values():
+            occupied_coords.add(unit.Position_j)
+        while True:
+            self.Position_j = random.randint(0, field.SIZE - 1)
+            if self.Position_j not in occupied_coords:
+                occupied_coords.add(self.Position_j)
+                break
+            else:
+                continue
 
     def moving(self, Field):
         print("Введите координаты клетки, куда вы хотите переместить выбранный юнит (Пример: A5):")
@@ -152,16 +200,6 @@ class Unit:
                     defender_pos = (data[1][0], data[1][1])
                     if (target_position == defender_pos):
                         unit.Get_damage(self, field, wizard)
-                # for unit in wizard.Captured_Player_Units:
-                #     data = unit.save_coordinates()
-                #     defender_pos = (data[1][0], data[1][1])
-                #     if (target_position == defender_pos):
-                #         wizard.get_damage(self, unit, field)
-                # for unit in wizard.Captured_Bot_Units:
-                #     data = unit.save_coordinates()
-                #     defender_pos = (data[1][0], data[1][1])
-                #     if (target_position == defender_pos):
-                #         wizard.get_damage(self, unit, field)
             else:
                 print('Attack is impossible')
 
@@ -190,10 +228,6 @@ class Unit:
                 del units[key]
                 break
 
-        # for i in range(len(units)):
-        #     if units[i] == self:
-        #         units.pop(i)
-        #         break
         field.game_field[self.Position_i][self.Position_j] = field.sub_game_field[self.Position_i][self.Position_j]
 
 
