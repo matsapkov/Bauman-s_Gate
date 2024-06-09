@@ -16,7 +16,9 @@ from Town.Academy import Academy
 from Town.Arsenal import Arsenal
 from Town.CraftWorkshop import CraftWorkshop
 from Town.Tavern import Tavern
+from Baumans_Gate.progress_checker import ProgressChecker
 
+pc = ProgressChecker()
 city_database = CityDatabase()
 database = Database()
 forge = Forge()
@@ -100,6 +102,9 @@ class GameMenu:
                 pickled_data_ = pickle.load(f)
                 print(f'Найден город!')
                 self.town = pickled_data_
+            pc.progress_check(self.town, self.player)
+
+
 
         self.bot.random_units()
         self.field.spawn_units(self.player)

@@ -1,6 +1,8 @@
 from Baumans_Gate.database.town_database import CityDatabase
 import pickle
 city_database = CityDatabase()
+
+
 class Town:
     def __init__(self):
         print('Ваш город создан! ')
@@ -19,7 +21,7 @@ class Town:
                     level_ = 'У этого здания нет уровня'
                 amount = building.amount
 
-                print(f'Номер: {index}; Здание: {name}; Цена в дереве: {wood_cost}; Цена в камне: {stone_cost}; Количество: {amount}; Уровень: {level_} ')
+                print(f'Номер: {index}; Здание: {name}; Цена в дереве: {wood_cost}; Цена в камне: {stone_cost}; Количество: {amount}; Уровень: {level_};')
         else:
             print('В вашем городе еще нет зданий!')
 
