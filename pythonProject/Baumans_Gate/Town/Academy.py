@@ -1,4 +1,4 @@
-from Baumans_Gate.units import Unit
+from Baumans_Gate.project.units import Unit
 
 
 class Academy:

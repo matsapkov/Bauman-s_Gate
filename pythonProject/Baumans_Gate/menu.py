@@ -1,23 +1,20 @@
-from player import Player
-from field import Field
-from units import Unit
-from bot import Bot
+from Baumans_Gate.project.player import Player
+from Baumans_Gate.project.field import Field
+from Baumans_Gate.project.units import Unit
+from Baumans_Gate.project.bot import Bot
 import pickle
-from map_creator.create_map import MapCreator
-from database.map_database import Database
-from database.town_database import CityDatabase
-from DarkWizard import DarkWizard, Alien
-from Town.Town import Town
-from Town.GenericBuilding import GenericBuilding
-from Town.DoctorsHouse import DoctorsHouse
-from Town.Forge import Forge
-from Town.Market import Market
-from Town.Academy import Academy
-from Town.Arsenal import Arsenal
-from Town.CraftWorkshop import CraftWorkshop
-from Town.Tavern import Tavern
-from Baumans_Gate.progress_checker import ProgressChecker
-
+from Baumans_Gate.database.map_database import Database
+from Baumans_Gate.database.town_database import CityDatabase
+from Baumans_Gate.project.DarkWizard import DarkWizard, Alien
+from Baumans_Gate.Town.Town import Town
+from Baumans_Gate.Town.DoctorsHouse import DoctorsHouse
+from Baumans_Gate.Town.Forge import Forge
+from Baumans_Gate.Town.Market import Market
+from Baumans_Gate.Town.Academy import Academy
+from Baumans_Gate.Town.Arsenal import Arsenal
+from Baumans_Gate.Town.CraftWorkshop import CraftWorkshop
+from Baumans_Gate.Town.Tavern import Tavern
+from Baumans_Gate.project.progress_checker import ProgressChecker
 pc = ProgressChecker()
 city_database = CityDatabase()
 database = Database()
@@ -30,7 +27,7 @@ arsenal = Arsenal()
 craft_workshop = CraftWorkshop()
 tavern = Tavern()
 Swordsman = Unit('Swordsman', 50, 8,3, 5,1, 10, 1,1.5,2,SC='on_foot')
-Horseman = Unit('Horseman', 30, 7, 6,5,1,20,1,1.5,2, SC='cavalry')
+Horseman = Unit('Horseman', 30, 7, 6,200,1,20,1,1.5,2, SC='cavalry')
 Archer = Unit('Archer', 30,8,2,6,5,15,1,1.5,2, SC='shooting')
 
 class GameMenu:
@@ -58,9 +55,9 @@ class GameMenu:
             database.show_maps()
             search_name = input('Введите имя карты, на которой вы хотите сыграть...\n')
             data = database.return_map(search_name)[0]
-            with open('pickles/searched_pickle.pkl', 'wb') as f:
+            with open(r'pickles/searched_pickle.pkl', 'wb') as f:
                 f.write(data)
-            with open('pickles/searched_pickle.pkl', 'rb') as f:
+            with open(r'pickles/searched_pickle.pkl', 'rb') as f:
                 pickled_data = pickle.load(f)
                 field = Field()
                 field.copy_from_pickle(pickled_data)
@@ -96,9 +93,9 @@ class GameMenu:
             login = input('Введите логин пользователя \n')
             user_password = input('Введите пароль для выбранной учетной записи \n')
             data_ = city_database.return_town(login, user_password)[0]
-            with open('pickles/searched_pickle.pkl', 'wb') as f:
+            with open(r'pickles/searched_pickle.pkl', 'wb') as f:
                 f.write(data_)
-            with open('pickles/searched_pickle.pkl', 'rb') as f:
+            with open(r'pickles/searched_pickle.pkl', 'rb') as f:
                 pickled_data_ = pickle.load(f)
                 print(f'Найден город!')
                 self.town = pickled_data_
@@ -247,14 +244,15 @@ class GameMenu:
             craft_workshop.pay_rent(self.player)
             if len(self.player['units']) == 0:
                 print('----------BOT WON----------')
-                print('Нужно сохранить город!')
+                print('Игра окончена! Нужно сохранить город!')
                 self.town.update_town()
-                break
+                print('Твоя мать шлюха')
+                return '----------BOT WON----------'
             if len(self.bot['dict_units']) == 0:
                 print('----------PLAYER WON----------')
-                print('Нужно сохранить город!')
+                print('Игра окончена! Нужно сохранить город!')
                 self.town.update_town()
-                break
+                return '----------PLAYER WON----------'
             self.field.update_field(self.player, self.bot, self.Wizard)
             self.field.print_field(self.field.game_field)
             self.field.print_coordinates()
