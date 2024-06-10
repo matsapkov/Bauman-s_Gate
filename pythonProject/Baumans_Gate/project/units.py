@@ -69,6 +69,14 @@ class Unit:
         self.__hit_Points = value
 
     @property
+    def RANGE(self):
+        return self.__attack_Range
+
+    @RANGE.setter
+    def RANGE(self, value):
+        self.__attack_Range = value
+
+    @property
     def DEF(self):
         return self.__def_Points
 
@@ -171,7 +179,6 @@ class Unit:
 
         choice = int(input('Если это чужой, введите 2, если это маг, введите 1, если это бот, введите 0: '))
         if choice == 0:
-            print('Выбрана атака по боту')
             if (self['range'] >= hypotenuse):
                 for unit in bot.get_units():
                     data = unit.save_coordinates()
@@ -182,7 +189,6 @@ class Unit:
                 print('Attack is impossible')
 
         if (choice == 1):
-            print('Выбрана атака по магу')
             if (self['range'] >= hypotenuse):
                 for unit in wizard.Wizards:
                     defender_pos = (wizard.Position_i,wizard.Position_j )
@@ -193,7 +199,6 @@ class Unit:
                 print('Attack is impossible')
 
         if choice == 2:
-            print('Выбрана атака по чужому')
             if (self['range'] >= hypotenuse):
                 for unit in wizard.Aliens:
                     data = unit.save_coordinates()

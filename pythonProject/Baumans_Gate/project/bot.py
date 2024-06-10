@@ -76,27 +76,17 @@ class Bot(Player, Unit):
                 enemy_pos[1] = nearest_enemy_coords[key][1]
                 foundKey = key
                 minDist = distance
-
         foundKey.prev_positionI = foundKey.Position_i
         foundKey.prev_positionJ = foundKey.Position_j
-        #print(foundKey.Position_i, foundKey.Position_j)
-        #print(enemy_pos)
-        #print("Заходим в цикл атаки бота")
+
         for index, defender in player['units'].items():
             defender_pos = [defender.Position_i, defender.Position_j]
-            #print(defender_pos)
-            #print("Заходим в иф")
-            #print(defender_pos, '------', foundKey.Position_i, foundKey.Position_j)
-            #print(minDist ** 0.5, foundKey['range'])
             if (defender_pos == enemy_pos):
                 target_unit = defender
 
-        #print('Принтим корды таргет юнита',target_unit.Position_i, target_unit.Position_j)
         if (minDist ** 0.5) <= foundKey['range']:
-            #print('Сработала атака')
             target_unit.get_damage(foundKey, field, player)
         else:
-            #print('Cработал элс', foundKey.Position_i, foundKey.Position_j, '------', foundKey.prev_positionI, foundKey.prev_positionJ)
             foundKey.Position_i -= 1
 
         foundKey.save_coordinates()

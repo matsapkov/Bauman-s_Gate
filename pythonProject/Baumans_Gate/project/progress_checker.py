@@ -25,6 +25,10 @@ class ProgressChecker:
                     print(f'Все юниты получили +1 к {choice}!')
                 else:
                     print('Недопустимая характеристика. Попробуйте снова.')
+                for technology in building.technologies:
+                    if technology.researched:
+                        for unit in player['units'].values():
+                            unit.HP += technology.hp_increase
 
             if building.name == 'Forge':
                 building.attack_upgrade(player)

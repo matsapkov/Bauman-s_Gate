@@ -246,7 +246,6 @@ class GameMenu:
                 print('----------BOT WON----------')
                 print('Игра окончена! Нужно сохранить город!')
                 self.town.update_town()
-                print('Твоя мать шлюха')
                 return '----------BOT WON----------'
             if len(self.bot['dict_units']) == 0:
                 print('----------PLAYER WON----------')
