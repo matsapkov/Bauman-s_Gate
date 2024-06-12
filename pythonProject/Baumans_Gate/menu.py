@@ -1,20 +1,20 @@
-from Baumans_Gate.project.player import Player
-from Baumans_Gate.project.field import Field
-from Baumans_Gate.project.units import Unit
-from Baumans_Gate.project.bot import Bot
+from project.player import Player
+from project.field import Field
+from project.units import Unit
+from project.bot import Bot
 import pickle
-from Baumans_Gate.database.map_database import Database
-from Baumans_Gate.database.town_database import CityDatabase
-from Baumans_Gate.project.DarkWizard import DarkWizard, Alien
-from Baumans_Gate.Town.Town import Town
-from Baumans_Gate.Town.DoctorsHouse import DoctorsHouse
-from Baumans_Gate.Town.Forge import Forge
-from Baumans_Gate.Town.Market import Market
-from Baumans_Gate.Town.Academy import Academy
-from Baumans_Gate.Town.Arsenal import Arsenal
-from Baumans_Gate.Town.CraftWorkshop import CraftWorkshop
-from Baumans_Gate.Town.Tavern import Tavern
-from Baumans_Gate.project.progress_checker import ProgressChecker
+from database.map_database import Database
+from database.town_database import CityDatabase
+from project.DarkWizard import DarkWizard, Alien
+from Town.Town import Town
+from Town.DoctorsHouse import DoctorsHouse
+from Town.Forge import Forge
+from Town.Market import Market
+from Town.Academy import Academy
+from Town.Arsenal import Arsenal
+from Town.CraftWorkshop import CraftWorkshop
+from Town.Tavern import Tavern
+from project.progress_checker import ProgressChecker
 pc = ProgressChecker()
 city_database = CityDatabase()
 database = Database()

@@ -4,7 +4,7 @@ import pickle
 from unittest.mock import patch
 from menu import GameMenu
 import time
-from Baumans_Gate.database.map_database import Database
+from database.map_database import Database
 database = Database()
 @pytest.fixture(scope='function', autouse=False)
 def prepare_game():

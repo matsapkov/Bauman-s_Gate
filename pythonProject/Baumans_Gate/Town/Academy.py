@@ -1,6 +1,5 @@
 from Baumans_Gate.project.units import Unit
 
-
 class Academy:
     def __init__(self):
         self.name = 'Academy'
